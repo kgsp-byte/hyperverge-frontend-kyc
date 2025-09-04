@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC Web Widget – DigiLocker + Face & Voice</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1100px;
+      width: 95%;
+    }
+    .card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin: 0;
+      background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { font-size: 0.9rem; opacity: 0.8; margin-bottom: 12px; }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+    input { background: rgba(255,255,255,0.12); color: #fff; }
+    button {
+      background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .facebox {
+      margin-top: 10px;
+      border: 1px dashed rgba(255,255,255,0.2);
+      border-radius: 12px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #000;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .tag {
+      background: rgba(255,255,255,0.12);
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+    }
+    .voice-box {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDE -->
+    <section class="card">
+      <h1>Lightweight KYC – Web Widget</h1>
+      <div class="subtitle">DigiLocker + AI Face + Voice Assistant</div>
+      
+      <label>DigiLocker-linked Mobile</label>
+      <input type="text" placeholder="+91 ••••••1234">
+      <button onclick="speak('Continuing with DigiLocker authentication')">Continue with DigiLocker</button>
+
+      <label style="margin-top:14px;">Face Authentication</label>
+      <div class="facebox">
+        <video id="video" autoplay playsinline></video>
+      </div>
+      <button id="startLiveness">Start Liveness</button>
+      <div class="voice-box" id="voiceStatus">🎤 Voice Assistant Ready</div>
+    </section>
+
+    <!-- RIGHT SIDE -->
+    <aside class="card">
+      <h2>How it Works</h2>
+      <div class="tags">
+        <div class="tag">Step 1: DigiLocker OTP</div>
+        <div class="tag">Step 2: Auto-fetch PAN / Voter ID</div>
+        <div class="tag">Step 3: Face Liveness + Voice</div>
+        <div class="tag">Step 4: Retry (Kafka + Redis)</div>
+        <div class="tag">Step 5: KYC Certificate</div>
+      </div>
+
+      <h2 style="margin-top:18px;">Tech Stack</h2>
+      <div class="tags">
+        <div class="tag">ReactJS</div>
+        <div class="tag">Spring Boot</div>
+        <div class="tag">TensorFlow Lite</div>
+        <div class="tag">Web Speech API</div>
+        <div class="tag">Kafka</div>
+        <div class="tag">Redis</div>
+        <div class="tag">AWS S3</div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById("startLiveness");
+    const video = document.getElementById("video");
+    const voiceStatus = document.getElementById("voiceStatus");
+
+    // Function for Voice Assistant
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = "en-IN"; // Indian English voice
+      speechSynthesis.speak(msg);
+      voiceStatus.innerText = "🔊 " + text;
+    }
+
+    // Start Camera and Speak
+    startBtn.addEventListener("click", async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        speak("Camera started. Please look straight into the camera.");
+      } catch (err) {
+        speak("Camera access denied or not available.");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
